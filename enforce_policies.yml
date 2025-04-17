@@ -1,0 +1,16 @@
+- name: "CONTAIN COMPROMISED HOST"  
+  hosts: cisco_firewalls  
+  vars:  
+    ioc_ip: "10.0.0.42"  
+  tasks:  
+    - name: "BLOCK IOC AT EDGE"  
+      cisco.ios.ios_acl:  
+        name: "ZTNA_DENY_LIST"  
+        lines: "deny ip host {{ ioc_ip }} any"  
+        state: present  
+
+    - name: "ISOLATE VLAN"  
+      cisco.ios.ios_config:  
+        commands:  
+          - "vlan isolation 666"  
+          - "switchport access vlan 666 {{ compromised_port }}"  
